@@ -1,1 +1,60 @@
+class Solution {
+public:
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        vector<int> topoOrder;
 
+
+unordered_map<int,list<int>>adj;
+
+for (auto i:prerequisites){
+    int index=i[0];
+    int value=i[1];
+    adj[index].push_back(value);
+}
+
+
+int n=numCourses;
+        topSortBfs(n,topoOrder,adj); 
+
+       if(topoOrder.size()==numCourses){
+        return true;
+       }
+       return false;
+        
+    }
+ void topSortBfs(int n, vector<int>& topoOrder,unordered_map<int,list<int>>adj) {
+		queue<int> q;
+		map<int,int> indegree;
+		
+	
+		for( auto i : adj) {
+			for(auto nbr: i.second) {
+				indegree[nbr]++;
+			}
+		}
+		for(int node=0; node<n; node++) {
+			if(indegree[node] == 0) {
+				q.push(node);
+			}
+		}
+
+		while(!q.empty()) {
+			int frontNode = q.front();
+			q.pop();
+			topoOrder.push_back(frontNode);
+
+			for(auto nbr: adj[frontNode]) {
+				indegree[nbr]--;
+
+				//check for zero
+				if(indegree[nbr] == 0) {
+					q.push(nbr);
+				}
+			}
+		}
+	}
+
+
+
+    
+};
